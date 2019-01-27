@@ -34,10 +34,10 @@ install:
   - cmd: call setup_x64
 
   - cmd: conda create --name TEST python=%PY% numpy=%NPY% cython pip pytest hdf5 libnetcdf cftime
-  - cmd: conda activate TEST
-
   - cmd: conda info --all
   - cmd: conda list
+  - cmd: conda activate TEST
+
 
   - cmd: echo [options] > setup.cfg
   - cmd: echo [directories] >> setup.cfg
