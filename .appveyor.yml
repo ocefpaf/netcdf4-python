@@ -2,11 +2,11 @@ environment:
   CONDA_INSTALL_LOCN: C:\\Miniconda36-x64
   matrix:
     - TARGET_ARCH: x64
-      NPY: 1.15
+      NPY: 1.16
       PY: 3.6
 
     - TARGET_ARCH: x64
-      NPY: 1.15
+      NPY: 1.16
       PY: 3.7
 
 platform:
@@ -35,8 +35,8 @@ install:
 
   - cmd: conda create --name TEST python=%PY% numpy=%NPY% cython pip pytest hdf5 libnetcdf cftime
   - cmd: conda info --all
-  - cmd: conda list
   - cmd: conda activate TEST
+  - cmd: conda list
 
 
   - cmd: echo [options] > setup.cfg
