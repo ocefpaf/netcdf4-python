@@ -3,17 +3,13 @@ name: Wheels
 on:
   pull_request:
   push:
-    tags:
-      - "v*"
-  release:
-    types:
-      - published
 
 permissions:
   contents: read
 
 jobs:
 
+<<<<<<< HEAD
   build_sdist:
     name: Build source distribution
     runs-on: ubuntu-22.04
@@ -44,6 +40,8 @@ jobs:
           path: ${{ github.workspace }}/dist/*.tar.gz
 
 
+=======
+>>>>>>> 0b8973db (test)
   build_bdist:
     name: "Build ${{ matrix.os }} (${{ matrix.arch }}) wheels"
     runs-on: ${{ matrix.os }}
@@ -53,6 +51,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
+<<<<<<< HEAD
           - os: ubuntu-22.04
             arch: x86_64
           - os: ubuntu-22.04
@@ -63,11 +62,18 @@ jobs:
           - os: macos-11
             arch: x86_64
             CIBW_ENVIRONMENT: MACOSX_DEPLOYMENT_TARGET=11.0
+=======
+          - os: macos-14
+            arch: arm64
+          - os: macos-13
+            arch: x86_64
+>>>>>>> 0b8973db (test)
 
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+<<<<<<< HEAD
 
     # For aarch64 support
     # https://cibuildwheel.pypa.io/en/stable/faq/#emulation
@@ -103,7 +109,34 @@ jobs:
         CIBW_TEST_SKIP: "cp38-*_aarch64 cp39-*_aarch64 cp310-*_aarch64 cp311-*_aarch64"
         CIBW_ENVIRONMENT: ${{ matrix.CIBW_ENVIRONMENT }}
         CIBW_BEFORE_BUILD_MACOS: brew install hdf5 netcdf
+=======
+        submodules: 'true'
+
+    - uses: actions/setup-python@v5
+      name: Install Python
+      with:
+        python-version: 3.x
+
+    - name: Setup Micromamba Python ${{ matrix.python-version }}
+      uses: mamba-org/setup-micromamba@v1
+      with:
+        environment-name: build
+        init-shell: bash
+        create-args: >-
+          python=${{ matrix.python-version }} libnetcdf=4.9.2 --channel conda-forge
+
+    - name: "Building ${{ matrix.os }} (${{ matrix.arch }}) wheels"
+      uses: pypa/cibuildwheel@v2.16.5
+      env:
+        CIBW_BUILD: "cp38-macosx_${{ matrix.arch }} cp312-macosx_${{ matrix.arch }}"
+        # CIBW_BUILD: "cp39-${{ matrix.arch }} cp39-${{ matrix.arch }} cp310-${{ matrix.arch }} cp311-${{ matrix.arch }} cp312-${{ matrix.arch }}"
+        CIBW_ENVIRONMENT_MACOS: >
+          HDF5_DIR="/Users/runner/micromamba/envs/build"
+          NETCDF4_DIR="/Users/runner/micromamba/envs/build"
+>>>>>>> 0b8973db (test)
         CIBW_TEST_REQUIRES: pytest cython packaging
+        # We need ncdump on path for 3 tests.
+        CIBW_BEFORE_BUILD_MACOS: brew install netcdf
         CIBW_TEST_COMMAND: >
           python -c "import netCDF4; print(f'netCDF4 v{netCDF4.__version__}')"
           && pytest -s -rxs -v {project}/test
@@ -115,6 +148,7 @@ jobs:
         name: pypi-artifacts-${{ matrix.os }}-${{ matrix.arch }}
         path: ${{ github.workspace }}/wheelhouse/*.whl
 
+<<<<<<< HEAD
 
   build_wheels_windows:
     name: Build wheels for ${{matrix.arch}} on ${{ matrix.os }}
@@ -168,8 +202,10 @@ jobs:
           path: ${{ github.workspace }}/wheelhouse/*.whl
 
 
+=======
+>>>>>>> 0b8973db (test)
   show-artifacts:
-    needs: [build_bdist, build_sdist, build_wheels_windows]
+    needs: [build_bdist]
     name: "Show artifacts"
     runs-on: ubuntu-22.04
     steps:
@@ -182,6 +218,7 @@ jobs:
     - shell: bash
       run: |
         ls -lh ${{ github.workspace }}/dist
+<<<<<<< HEAD
 
 
   publish-artifacts-pypi:
@@ -202,3 +239,5 @@ jobs:
         user: __token__
         password: ${{ secrets.PYPI_PASSWORD }}
         print_hash: true
+=======
+>>>>>>> 0b8973db (test)
