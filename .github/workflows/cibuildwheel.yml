@@ -13,7 +13,7 @@ jobs:
     name: "Build ${{ matrix.os }} (${{ matrix.arch }}) wheels"
     runs-on: ${{ matrix.os }}
     # Prevent hanging when building from emulation like aarch64.
-    timeout-minutes: 60
+    timeout-minutes: 300
     strategy:
       fail-fast: false
       matrix:
@@ -68,6 +68,8 @@ jobs:
         CIBW_TEST_COMMAND: >
           python -c "import netCDF4; print(f'netCDF4 v{netCDF4.__version__}')"
           && pytest -s -rxs -v {project}/test
+          && URL="https://icdc.cen.uni-hamburg.de/thredds/dodsC/ftpthredds/hamtide/m2.hamtide11a.nc"
+          && python -c "from netCDF4 import Dataset; nc=Dataset(\"${URL}\"); print(nc)"
 
     - uses: actions/upload-artifact@v4
       with:
