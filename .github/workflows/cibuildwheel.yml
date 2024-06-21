@@ -43,16 +43,16 @@ jobs:
     - name: "Building ${{ matrix.os }} (${{ matrix.arch }}) wheels"
       uses: pypa/cibuildwheel@v2.16.5
       env:
-        CIBW_BUILD: "cp38-macosx_${{ matrix.arch }} cp312-macosx_${{ matrix.arch }}"
+        CIBW_BUILD: "cp312-macosx_${{ matrix.arch }}"
         # CIBW_BUILD: "cp39-${{ matrix.arch }} cp39-${{ matrix.arch }} cp310-${{ matrix.arch }} cp311-${{ matrix.arch }} cp312-${{ matrix.arch }}"
         CIBW_ENVIRONMENT_MACOS: >
           HDF5_DIR="/Users/runner/micromamba/envs/build"
           NETCDF4_DIR="/Users/runner/micromamba/envs/build"
         CIBW_TEST_REQUIRES: pytest cython packaging
         # We need ncdump on path for 3 tests.
-        CIBW_BEFORE_BUILD_MACOS: brew install netcdf
         CIBW_TEST_COMMAND: >
-          python -c "import netCDF4; print(f'netCDF4 v{netCDF4.__version__}')"
+          brew install netcdf
+          && python -c "import netCDF4; print(f'netCDF4 v{netCDF4.__version__}')"
           && pytest -s -rxs -v {project}/test
 
     - uses: actions/upload-artifact@v4
