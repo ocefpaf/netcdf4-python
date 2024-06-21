@@ -18,8 +18,8 @@ jobs:
         include:
           - os: ubuntu-22.04
             arch: x86_64
-          - os: ubuntu-22.04
-            arch: aarch64
+          # - os: ubuntu-22.04
+          #   arch: aarch64
           # - os: macos-14
           #   arch: arm64
           #   CIBW_ENVIRONMENT: MACOSX_DEPLOYMENT_TARGET=14.0
@@ -48,7 +48,7 @@ jobs:
     - name: "Building ${{ matrix.os }} (${{ matrix.arch }}) wheels"
       uses: pypa/cibuildwheel@v2.16.5
       env:
-        CIBW_BUILD: "cp312-macosx_${{ matrix.arch }}"
+        CIBW_BUILD: "cp312-*_${{ matrix.arch }}"
         CIBW_ENVIRONMENT_MACOS: >
           HDF5_DIR="/Users/runner/micromamba/envs/build"
           NETCDF4_DIR="/Users/runner/micromamba/envs/build"
