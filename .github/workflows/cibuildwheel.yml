@@ -16,21 +16,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
+          - os: macos-14
+            arch: arm64
+          - os: macos-13
             arch: x86_64
-          - os: ubuntu-22.04
-            arch: aarch64
-          # - os: macos-14
-          #   arch: arm64
-          #   CIBW_ENVIRONMENT: MACOSX_DEPLOYMENT_TARGET=14.0
-          - os: macos-11
-            arch: x86_64
-            CIBW_ENVIRONMENT: MACOSX_DEPLOYMENT_TARGET=11.0
 
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        submodules: 'true'
 
     - uses: actions/setup-python@v5
       name: Install Python
@@ -48,21 +43,17 @@ jobs:
     - name: "Building ${{ matrix.os }} (${{ matrix.arch }}) wheels"
       uses: pypa/cibuildwheel@v2.16.5
       env:
-        CIBW_BUILD: "cp312-*_${{ matrix.arch }}"
+        CIBW_BUILD: "cp38-macosx_${{ matrix.arch }} cp312-macosx_${{ matrix.arch }}"
+        # CIBW_BUILD: "cp39-${{ matrix.arch }} cp39-${{ matrix.arch }} cp310-${{ matrix.arch }} cp311-${{ matrix.arch }} cp312-${{ matrix.arch }}"
         CIBW_ENVIRONMENT_MACOS: >
           HDF5_DIR="/Users/runner/micromamba/envs/build"
-          netCDF4_DIR="/Users/runner/micromamba/envs/build"
-        CIBW_ENVIRONMENT_LINUX: >
-          HDF5_DIR="/home/runner/micromamba/envs/build"
-          netCDF4_DIR="/home/runner/micromamba/envs/build"
+          NETCDF4_DIR="/Users/runner/micromamba/envs/build"
         CIBW_TEST_REQUIRES: pytest cython packaging
+        # We need ncdump on path for 3 tests.
+        CIBW_BEFORE_BUILD_MACOS: brew install netcdf
         CIBW_TEST_COMMAND: >
-          # We need ncdump on path for 3 tests.
-          brew install netcdf
-          && python -c "import netCDF4; print(f'netCDF4 v{netCDF4.__version__}')"
+          python -c "import netCDF4; print(f'netCDF4 v{netCDF4.__version__}')"
           && pytest -s -rxs -v {project}/test
-          && URL="https://icdc.cen.uni-hamburg.de/thredds/dodsC/ftpthredds/hamtide/m2.hamtide11a.nc"
-          && python -c "from netCDF4 import Dataset; nc=Dataset(\"${URL}\"); print(nc)"
 
     - uses: actions/upload-artifact@v4
       with:
