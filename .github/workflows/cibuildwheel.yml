@@ -58,7 +58,7 @@ jobs:
         # CIBW_MANYLINUX_AARCH64_IMAGE: ghcr.io/ocefpaf/manylinux2014_aarch64-netcdf
         CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
         CIBW_BEFORE_BUILD_LINUX: >
-          sh .ci/build_deps.sh
+          sh .ci/install_libs.sh
         # Emulation testing is slow, testing only latest Python.
         CIBW_TEST_SKIP: "cp38-*_aarch64 cp39-*_aarch64 cp310-*_aarch64 cp311-*_aarch64"
         CIBW_ENVIRONMENT: ${{ matrix.CIBW_ENVIRONMENT }}
