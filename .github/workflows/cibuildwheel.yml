@@ -51,10 +51,10 @@ jobs:
         CIBW_BUILD: "cp312-*_${{ matrix.arch }}"
         CIBW_ENVIRONMENT_MACOS: >
           HDF5_DIR="/Users/runner/micromamba/envs/build"
-          NETCDF4_DIR="/Users/runner/micromamba/envs/build"
+          netCDF4_DIR="/Users/runner/micromamba/envs/build"
         CIBW_ENVIRONMENT_LINUX: >
           HDF5_DIR="/home/runner/micromamba/envs/build"
-          NETCDF4_DIR="/home/runner/micromamba/envs/build"
+          netCDF4_DIR="/home/runner/micromamba/envs/build"
         CIBW_TEST_REQUIRES: pytest cython packaging
         CIBW_TEST_COMMAND: >
           # We need ncdump on path for 3 tests.
