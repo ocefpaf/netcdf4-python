@@ -29,7 +29,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        submodules: 'true'
 
     - uses: actions/setup-python@v5
       name: Install Python
@@ -54,7 +53,7 @@ jobs:
           NETCDF4_DIR="/Users/runner/micromamba/envs/build"
         CIBW_ENVIRONMENT_LINUX: >
           HDF5_DIR="/home/runner/micromamba/envs/build"
-          netCDF4_DIR="/home/runner/micromamba/envs/build"
+          NETCDF4_DIR="/home/runner/micromamba/envs/build"
         CIBW_TEST_REQUIRES: pytest cython packaging
         # We need ncdump on path for 3 tests.
         CIBW_TEST_COMMAND: >
